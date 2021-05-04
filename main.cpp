@@ -12,7 +12,6 @@ class Player
 		m_categorie = "Joueur";
 		cout<<"Quel est votre nom"<<endl;
 		cout<<"> ";cin>>m_nom;
-		cout<<"\n\n"<<endl;
 	}
 	void define_bot()
 	{
@@ -22,9 +21,19 @@ class Player
 	}
 	void infos()
 	{
-		cout<<"== Voici les informations sur le personnage ==\n"<<endl;
+		cout<<"== Voici les informations sur le personnage =="<<endl;
 		cout<<"Nom: "<<m_nom<<endl;
-		cout<<"Vie: "<<m_vie<<"\n\n"<<endl;
+		cout<<"Catégorie: "<<m_categorie<<endl;
+		cout<<"Vie: "<<m_vie<<endl;
+	}
+	void change_nom_joueur()
+	{
+		cout<<"Quel est le nouveau nom ?"<<endl;
+		cout<<"> ";cin>>m_nom;
+	}
+	string affiche_nom_joueur()
+	{
+		return m_nom;
 	}
 	
 	private:
@@ -47,14 +56,14 @@ int main()
 	int foo;
 	
 	//programme
+	Player joueur, bot;
 	while(b_continue == true)//Boucle principale
 	{
 		start_menu();
-		while((b_que_faire > 2/*x+1*/) || (b_que_faire < 0))/*Traitement de l'input du bit de choix de menu*/
+		while((b_que_faire > 2) || (b_que_faire < 0))/*Traitement de l'input du bit de choix de menu*/
 		{
-			cout<<"Que voulez vous faire ?\n> ";cin>>b_que_faire;
-//			b_que_faire = check_int(b_que_faire);
-			cout<<"\n"<<endl;
+			cout<<"Que voulez vous faire ?"<<endl;
+			cout<<"> ";cin>>b_que_faire;
 		}
 		if(b_que_faire == 0)//Quitter le programme
 		{
@@ -63,40 +72,55 @@ int main()
 		}
 		else if(b_que_faire == 1)//Entrer dans la phase de jeu
 		{
-			while(b_game_continue == true)//boucle principale de la section "jeu"
+			do//boucle principale de la section "jeu"
 			{
 				game_menu();
-				while((b_game_que_faire > 5/*x+1*/) || (b_game_que_faire < 0))//Traitement de l'input du bit de selection de la section "jeu"
+				do//Traitement de l'input du bit de selection de la section "jeu"
 				{
-					cout<<"Que voulez vous faire ?\n> ";cin>>b_game_que_faire;
+					cout<<"Que voulez vous faire ?"<<endl;
+					cout<<"> ";cin>>b_game_que_faire;
 					//Vérifier que l'input est bien de type int
-					cout<<"\n"<<endl;
-				}
+				}while((b_game_que_faire > 5) || (b_game_que_faire < 0));
 				if(b_game_que_faire == 0)//Quitter la section "jeu"
 				{
 					b_game_continue = false;//On quitte la boucle principale de la section "jeu"
 				}
 				else if(b_game_que_faire == 1)//Lancer la partie contre un bot
 				{
-					Player joueur, bot;
-					/*Définition des joueurs*/
 					joueur.define_joueur();
 					bot.define_bot();
 					press_enter();
+					cin.get();
 					joueur.infos();
 					press_enter();
-					bot.infos();
+				}
+				else if(b_game_que_faire == 2)//changer de nom
+				{
+					cout<<"Votre nom était : "<<joueur.affiche_nom_joueur()<<endl;
+					joueur.change_nom_joueur();
+					cin.get();
 					press_enter();
 				}
-				else
+				else if (b_game_que_faire == 3)//afficher les informations du personnage (joueur)
+				{
+					joueur.infos();
+					cin.get();
+					press_enter();
+				}
+				else if(b_game_que_faire == 4)//afficher les informations du bot
+				{
+					bot.infos();
+					cin.get();
+					press_enter();
+				}
+				else//gestion des chiffres non recensés
 				{
 					cout<<"Erreur: le chiffre que vous avez entré ne correspond à aucune option du menu de jeu"<<endl;
+					b_game_continue == false;
 				}
 				b_game_que_faire = 100;//reset de la variable
-				cout<<"\n"<<endl;
-			}
+			}while(b_game_continue == true);
 			b_game_continue = true;//reset de la variable pour pouvoir revenir dans la boucle
-			cout<<"\n\n"<<endl;
 		}//FIN CONDITION "Phase Jeu"
 		else//Gestion d'eventuels cas inattendus...
 		{
@@ -111,7 +135,7 @@ int main()
 //Fonctions explicites
 void start_menu()
 {
-	cout<<"Menu de jeu:\n"<<endl;
+	cout<<"Menu du programme:\n"<<endl;
 	cout<<"0 - Fermer le programme."<<endl;
 	cout<<"1 - Aller dans le menu de Jeu."<<endl;
 }
@@ -128,9 +152,8 @@ void game_menu()
 
 void press_enter()
 {
-	cout<<"Appuyez sur Entrée"<<endl;
+	cout<<"Appuyez sur Entrée pour continuer..."<<endl;
 	cin.get();
-	cout<<"\n"<<endl;
 }
 
 //int check_int(int var_verif)//Input = entrée de l'utilisateur -> OUTPUT = int vérifié et non null.
