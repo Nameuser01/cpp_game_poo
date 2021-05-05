@@ -1,6 +1,5 @@
 #include <iostream>
 #include <string>
-
 using namespace std;
 
 class Player
@@ -8,14 +7,14 @@ class Player
 	public:
 	void define_joueur()
 	{
-		m_vie = 100;
+		m_vie = 10;
 		m_categorie = "Joueur";
 		cout<<"Quel est votre nom"<<endl;
 		cout<<"> ";cin>>m_nom;
 	}
 	void define_bot()
 	{
-		m_vie = 100;
+		m_vie = 10;
 		m_nom = "Mr Bot";
 		m_categorie = "Bot";
 	}
@@ -26,10 +25,16 @@ class Player
 		cout<<"Catégorie: "<<m_categorie<<endl;
 		cout<<"Vie: "<<m_vie<<endl;
 	}
-	void change_nom_joueur()
+	void change_nom()
 	{
 		cout<<"Quel est le nouveau nom ?"<<endl;
 		cout<<"> ";cin>>m_nom;
+	}
+	int nom_length()
+	{
+		int length;
+		length = m_nom.length();
+		return length;
 	}
 	string affiche_nom_joueur()
 	{
@@ -42,112 +47,121 @@ class Player
 };
 
 //Fonctions
-void start_menu();
 void game_menu();
 void press_enter();
-//int check_int(int var_verif);//Input = entrée de l'utilisateur -> OUTPUT = int vérifié et non null.
 
 int main()
 {
 	//bit_vars
-	bool b_continue(true), b_game_continue(true);
-	int b_que_faire(100), b_game_que_faire(100);
+	bool b_continue(true);
+	int b_que_faire(100);
+	int selec_infos_to_print(0);
+	
 	//vars
 	int foo;
 	
-	//programme
-	Player joueur, bot;
+	Player player, bot;
+	game_menu();
 	while(b_continue == true)//Boucle principale
 	{
-		start_menu();
-		while((b_que_faire > 2) || (b_que_faire < 0))/*Traitement de l'input du bit de choix de menu*/
+		while((b_que_faire > 4) || (b_que_faire < 0))/*Traitement de l'input du bit de choix de menu*/
 		{
 			cout<<"Que voulez vous faire ?"<<endl;
-			cout<<"> ";cin>>b_que_faire;
+			cout<<"> ";
+			cin>>b_que_faire;
 		}
 		if(b_que_faire == 0)//Quitter le programme
 		{
-			cout<<"Merci d'avoir utilisé ce programme"<<endl;
+			cout<<"Au revoir !"<<endl;
 			b_continue = false;
 		}
-		else if(b_que_faire == 1)//Entrer dans la phase de jeu
+		else if(b_que_faire == 1)//Lancer la partie
 		{
-			do//boucle principale de la section "jeu"
+			if(player.nom_length() > 0)
 			{
-				game_menu();
-				do//Traitement de l'input du bit de selection de la section "jeu"
+				//Ne rien faire
+			}
+			else
+			{
+				player.define_joueur();
+			}
+			if (bot.nom_length() > 0)
+			{
+				//Ne rien faire
+			}
+			else
+			{
+				bot.define_bot();
+			}
+			//C'est ici que le combat prend place ! (Ça va être long à créer)
+			cout<<"Le combat !"<<endl;
+		}
+		else if(b_que_faire == 2)//changer nom personnage
+		{
+			if(player.nom_length() > 0)
+			{
+				player.change_nom();
+			}
+			else
+			{
+				player.define_joueur();
+			}
+		}
+		else if(b_que_faire == 3)//Afficher les informations des personnages
+		{
+			cout<<"Voulez vous afficher vos infos (1) ou celles du bot (2) ?"<<endl;
+			cout<<"> ";
+			cin>>selec_infos_to_print;
+			if(selec_infos_to_print == 1)//Afficher les infos du joueur
+			{
+				if(player.nom_length() > 0 )
 				{
-					cout<<"Que voulez vous faire ?"<<endl;
-					cout<<"> ";cin>>b_game_que_faire;
-					//Vérifier que l'input est bien de type int
-				}while((b_game_que_faire > 5) || (b_game_que_faire < 0));
-				if(b_game_que_faire == 0)//Quitter la section "jeu"
-				{
-					b_game_continue = false;//On quitte la boucle principale de la section "jeu"
+					player.infos();
 				}
-				else if(b_game_que_faire == 1)//Lancer la partie contre un bot
+				else
 				{
-					joueur.define_joueur();
-					bot.define_bot();
-					press_enter();
-					cin.get();
-					joueur.infos();
-					press_enter();
+					cout<<"Veuillez créer votre personnage, il n'existe pas encore !"<<endl;
+					player.define_joueur();
+					player.infos();
 				}
-				else if(b_game_que_faire == 2)//changer de nom
-				{
-					cout<<"Votre nom était : "<<joueur.affiche_nom_joueur()<<endl;
-					joueur.change_nom_joueur();
-					cin.get();
-					press_enter();
-				}
-				else if (b_game_que_faire == 3)//afficher les informations du personnage (joueur)
-				{
-					joueur.infos();
-					cin.get();
-					press_enter();
-				}
-				else if(b_game_que_faire == 4)//afficher les informations du bot
+			}
+			else if(selec_infos_to_print == 2)//Afficher les infos du bot
+			{
+				if(player.nom_length() > 0)
 				{
 					bot.infos();
-					cin.get();
-					press_enter();
 				}
-				else//gestion des chiffres non recensés
+				else
 				{
-					cout<<"Erreur: le chiffre que vous avez entré ne correspond à aucune option du menu de jeu"<<endl;
-					b_game_continue == false;
+					bot.define_bot();
+					bot.infos();
 				}
-				b_game_que_faire = 100;//reset de la variable
-			}while(b_game_continue == true);
-			b_game_continue = true;//reset de la variable pour pouvoir revenir dans la boucle
-		}//FIN CONDITION "Phase Jeu"
-		else//Gestion d'eventuels cas inattendus...
+			}
+			else//Exeptions
+			{
+				cout<<"ERREUR: La valeur entrée n'est pas valide !"<<endl;
+			}
+			selec_infos_to_print = 0;
+		}
+		else//Gestion d'eventuels cas inattendus
 		{
 			cout<<"Erreur lors du traitement de la variable de selection. Fin du programme"<<endl;
 			b_continue = false;
 		}
 		b_que_faire = 100;
+		cout<<"\n"<<endl;
 	}
 	return 0;
 }
 
 //Fonctions explicites
-void start_menu()
-{
-	cout<<"Menu du programme:\n"<<endl;
-	cout<<"0 - Fermer le programme."<<endl;
-	cout<<"1 - Aller dans le menu de Jeu."<<endl;
-}
-
 void game_menu()
 {
 	cout<<"Menu de jeu:\n"<<endl;
 	cout<<"0 - Retourner au menu principal."<<endl;
 	cout<<"1 - Lancer la partie contre un bot."<<endl;
 	cout<<"2 - Changer votre nom de personnage."<<endl;
-	cout<<"3 - Afficher vos informations de personnage."<<endl;
-	cout<<"4 - Afficher les informations du bot."<<endl;
+	cout<<"3 - Afficher vos informations des personnages."<<endl;
 }
 
 void press_enter()
@@ -155,16 +169,3 @@ void press_enter()
 	cout<<"Appuyez sur Entrée pour continuer..."<<endl;
 	cin.get();
 }
-
-//int check_int(int var_verif)//Input = entrée de l'utilisateur -> OUTPUT = int vérifié et non null.
-//{
-//	int var_out = stoi(var_verif);//Vérification de la nature (int) de la variable
-//	ostringstream oss;
-//	oss<<var_out;
-//	if((oss.str().size()) <= 0)//On vérifie que le int est existant
-//	{
-//		var_out = 100;
-//	}
-//	else{}
-//	return var_out;	
-//}
