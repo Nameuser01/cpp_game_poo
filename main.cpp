@@ -1,5 +1,7 @@
 #include <iostream>
 #include <string>
+#include <stdlib.h>
+#include <time.h>
 using namespace std;
 
 class Player
@@ -40,6 +42,19 @@ class Player
 	{
 		return m_nom;
 	}
+	bool en_vie()
+	{
+		bool vivant(false);
+		if(m_vie <= 0)
+		{
+			vivant = false; //Le personnage n'a plus de vie
+		}
+		else
+		{
+			vivant = true; //Le personnage est vivant
+		}
+		return vivant;
+	}
 	
 	private:
 	int m_vie;
@@ -58,8 +73,10 @@ int main()
 	int selec_infos_to_print(0);
 	
 	//vars
-	int foo;
+	int foo, nbr_loop(0);
+	bool en_vie(true);
 	
+	srand (time(NULL));
 	Player player, bot;
 	game_menu();
 	while(b_continue == true)//Boucle principale
@@ -77,24 +94,32 @@ int main()
 		}
 		else if(b_que_faire == 1)//Lancer la partie
 		{
-			if(player.nom_length() > 0)
-			{
-				//Ne rien faire
-			}
-			else
+			if(player.nom_length() == 0)
 			{
 				player.define_joueur();
 			}
-			if (bot.nom_length() > 0)
-			{
-				//Ne rien faire
-			}
-			else
+			else{}
+			if (bot.nom_length() == 0)
 			{
 				bot.define_bot();
 			}
-			//C'est ici que le combat prend place ! (Ça va être long à créer)
-			cout<<"Le combat !"<<endl;
+			else{}
+			//C'est ici que le combat prend place ! (Il faut trouver un concept de jeu...)
+			while(en_vie == true)
+			{
+				if (player.en_vie() == false)
+				{
+					en_vie = false;
+				}
+				else{}
+				if (bot.en_vie() == false)
+				{
+					en_vie = false;
+				}
+				else{}
+				nbr_loop++;
+			}
+			nbr_loop = 0;
 		}
 		else if(b_que_faire == 2)//changer nom personnage
 		{
